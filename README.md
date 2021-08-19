@@ -1,4 +1,4 @@
-# manage-tiki-sheet
+# decimal
 
 ## Project setup
 ```

@@ -6,10 +6,11 @@
         id="amount"
         name="amount"
         type="text"
-        :maxlength="maxLength"
+        :maxlength="maxlength"
         :max="max"
         @paste.prevent
         @input="(v) => formatNumber(v)"
+        @blur="formatNumber(text)"
       />
       <span>Output: {{ text }}</span>
     </el-col>
@@ -27,7 +28,7 @@ export default {
     },
     max: {
       type: Number,
-      default: 15000000,
+      default: 150,
     }
   },
   data() {
@@ -42,7 +43,7 @@ export default {
       const newValue = value.target.value.split(',').join('');
       const floatValue = newValue ? parseFloat(newValue) : '';
       const isChartNumber = !!newChart && newChart !== '.' && !Number.isNaN(intChart);
-      const isDot = !!newChart && newChart === '.' && !!newValue && !newValue.slice(0, newValue.lenght - 1).includes('.');
+      const isDot = !!newChart && newChart === '.' && !!newChart && !newValue.slice(0, newValue.lenght - 1).includes('.');
       let newInput = '';
       if (isChartNumber || isDot) {
         newInput = newValue;
@@ -51,7 +52,7 @@ export default {
       }
       if (newInput) {
         const inputs = newInput.split('.');
-        const firstInput = inputs[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+        const firstInput = inputs[0].replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         const lastInput = inputs[1];
         if (inputs.lenght > 1) {
           this.text = `${firstInput}.${lastInput}`;
